@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --color-cream: #f3ede1;
+  --color-cream-deep: #ece3d2;
+  --color-ink: #231f1a;
+  --color-ink-soft: #4a4238;
+  --color-wood: #7c6248;
+  --color-line: #cdbfa4;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Work Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  /* Subtle lattice motif echoing the fabric print, tiled faintly across the page */
+  background-image:
+    radial-gradient(var(--color-wood) 0.6px, transparent 0.6px),
+    linear-gradient(45deg, transparent 48%, var(--color-ink) 49%, var(--color-ink) 51%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, var(--color-ink) 49%, var(--color-ink) 51%, transparent 52%);
+  background-size: 56px 56px, 56px 56px, 56px 56px;
+  background-position: 0 0, 0 0, 0 0;
+  background-blend-mode: normal;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: var(--color-cream);
+  opacity: 0.94;
+  z-index: 0;
+}
+
+#page-root {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .enter {
+    animation: enter 0.6s ease-out both;
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

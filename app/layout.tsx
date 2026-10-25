@@ -1,10 +1,22 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "kene. — tautan belanja",
   description:
     "Satu tautan untuk semua toko kene.studio — homedress premium yang nyaman di rumah.",
+  openGraph: {
+    title: "kene. — tautan belanja",
+    description: "Homedress premium — lembut di kulit, elegan dipakai siapa saja.",
+    url: "https://link.kene.studio",
+    siteName: "kene.studio",
+    locale: "id_ID",
+    type: "website",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f6f0e6",
 };
 
 export default function RootLayout({

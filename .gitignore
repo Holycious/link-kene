@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 data/*.db
 data/*.db-*
+/data/
+.fuse_hidden*
+
+# Agents
+AGENTS.md
+project.md

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowIcon, ShopeeIcon, TikTokIcon, WhatsAppIcon } from "./Icons";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -24,6 +25,8 @@ export function LinkButton({
   delay?: number;
 }) {
   const Icon = ICONS[icon];
+  const [ripples, setRipples] = useState<{ k: number; x: number; y: number }[]>([]);
+  const [imgFailed, setImgFailed] = useState(false);
 
   function track() {
     fetch("/api/click", {
@@ -36,32 +39,58 @@ export function LinkButton({
     });
   }
 
+  function onClick(e: React.MouseEvent<HTMLAnchorElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    const k = Date.now();
+    setRipples((rs) => [...rs, { k, x: e.clientX - r.left, y: e.clientY - r.top }]);
+    setTimeout(() => setRipples((rs) => rs.filter((p) => p.k !== k)), 700);
+    track();
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLAnchorElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
+  }
+
   return (
     <a
+      id={`link-${id}`}
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={track}
-      style={{ animationDelay: `${delay}ms` }}
-      className="enter group flex items-center gap-4 rounded-sm border border-[var(--color-ink)]
-                 bg-transparent px-5 py-4 transition-colors duration-200
-                 hover:bg-[var(--color-ink)] focus-visible:bg-[var(--color-ink)]
-                 outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-wood)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-cream)]"
+      onClick={onClick}
+      onPointerMove={onPointerMove}
+      data-icon={icon}
+      className="card reveal"
+      style={{ "--d": `${delay}ms` } as React.CSSProperties}
     >
-      {Icon && (
-        <Icon className="h-5 w-5 shrink-0 text-[var(--color-ink)] transition-colors duration-200 group-hover:text-[var(--color-cream)]" />
-      )}
-      <span className="flex-1 text-left">
-        <span className="block font-[family-name:var(--font-body)] text-[15px] font-medium tracking-tight text-[var(--color-ink)] transition-colors duration-200 group-hover:text-[var(--color-cream)]">
-          {label}
-        </span>
-        {subtitle && (
-          <span className="mt-0.5 block text-[12.5px] text-[var(--color-ink-soft)] transition-colors duration-200 group-hover:text-[var(--color-cream-deep)]">
-            {subtitle}
-          </span>
+      <span className={`badge${imgFailed ? "" : " has-img"}`}>
+        {imgFailed ? (
+          Icon && <Icon />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={`/icons/${icon}.png`}
+            alt=""
+            onError={() => setImgFailed(true)}
+            ref={(el) => {
+              if (el?.complete && !el.naturalWidth) setImgFailed(true);
+            }}
+          />
         )}
       </span>
-      <ArrowIcon className="h-4 w-4 shrink-0 text-[var(--color-wood)] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--color-cream)]" />
+      <span className="card-text">
+        <span className="card-label">{label}</span>
+        {subtitle && <span className="card-sub">{subtitle}</span>}
+      </span>
+      <span className="arrow" aria-hidden="true">
+        <ArrowIcon />
+        <ArrowIcon />
+      </span>
+      {ripples.map((p) => (
+        <span key={p.k} className="ripple" style={{ left: p.x, top: p.y }} />
+      ))}
     </a>
   );
 }

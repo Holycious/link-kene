@@ -47,4 +47,7 @@ data/*.db-*
 # Agents
 AGENTS.md
 project.md
+
+# Deployment
 deploy.sh
+deploy-static.sh

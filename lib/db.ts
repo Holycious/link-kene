@@ -79,7 +79,7 @@ if (count === 0) {
       id: "whatsapp",
       label: "Chat Admin",
       subtitle: "Tanya stok, ukuran, & pemesanan custom",
-      url: "https://wa.me/6281234567890",
+      url: "https://wa.me/6282139838695",
       icon: "whatsapp",
       sort_order: 3,
     },
